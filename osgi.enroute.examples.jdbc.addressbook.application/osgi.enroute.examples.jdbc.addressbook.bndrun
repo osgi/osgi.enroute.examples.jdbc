@@ -1,0 +1,17 @@
+#
+# OSGI ENROUTE EXAMPLES JDBC ADDRESSBOOK APPLICATION RUN SPECIFICATION
+#
+
+
+Bundle-Version:				1.0.0.${tstamp}
+Bundle-SymbolicName:		osgi.enroute.examples.jdbc.addressbook.application.launch
+JPM-Command:					addrssb
+
+
+-runfw:						org.eclipse.osgi
+
+-runrequires:  \
+	osgi.identity;filter:='(osgi.identity=osgi.enroute.examples.jdbc.addressbook.application)'
+
+-runbundles: \
+	${error;Resolve first}

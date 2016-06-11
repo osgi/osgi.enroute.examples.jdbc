@@ -1,2 +1,29 @@
 [
+	{
+		"service.factoryPid": "org.apache.aries.tx.control.jdbc.local",
+		"service.pid": "osgi.enroute.examples.jdbc.addressbook.dsH2",
+		"user": "sa",
+		"password": "",
+		"databaseName": "mem:enroute_addressbook",
+		"dataSourceName": "addressBookDS-H2",
+		"url": "jdbc:h2:mem:enroute_addressbook;DB_CLOSE_DELAY=-1",
+		"aries.dsf.target.filter": "(osgi.jdbc.driver.name=h2)",
+		"aries.jdbc.property.names": "user,serverName,portNumber,password,databaseName"
+	},
+	{
+		"service.factoryPid": "org.apache.aries.tx.control.jdbc.local",
+		"service.pid": "osgi.enroute.examples.jdbc.addressbook.dsMariadb",
+		"user": "demo",
+		"password": "demo",
+		"databaseName": "demodb",
+		"dataSourceName": "addressBookDS-MariaDB",
+		"serverName": "localhost",
+		"portNumber": "3306",
+		"aries.dsf.target.filter": "(osgi.jdbc.driver.name=mariadb)",
+		"aries.jdbc.property.names": "user,serverName,portNumber,password,databaseName"
+	},
+	{
+		"service.pid": "osgi.enroute.examples.jdbc.addressbook.dao.person",
+		"provider.target": "(dataSourceName=addressBookDS-MariaDB)"
+	}
 ]

@@ -21,7 +21,10 @@ import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 /**
  * 
  */
-@Component(name = "osgi.enroute.examples.jdbc.addressbook.dao",property="entity=Person",service=CrudDAO.class)
+@Component(name = "osgi.enroute.examples.jdbc.addressbook.dao",
+           property="entity=Person",
+           service=CrudDAO.class,
+           configurationPid = "osgi.enroute.examples.jdbc.addressbook.dao.person")
 public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
 
     private final Logger LOGGER = LoggerFactory.getLogger(PersonDAOImpl.class);
@@ -34,8 +37,8 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
 
     JDBCConnectionProvider jdbcConnectionProvider;
 
-    @Reference(target="(dataSourceName=addressBookDS)")
-    void setProvider(JDBCConnectionProvider jdbcConnectionProvider){
+    @Reference(unbind="-",name="provider")
+    void setProvider(JDBCConnectionProvider jdbcConnectionProvider){      
         this.jdbcConnectionProvider = jdbcConnectionProvider;
     }
 
@@ -87,7 +90,7 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
             PersonDTO person = null;
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM PERSONS where PERSON_ID=?");
             pst.setLong(1, pk);
-            
+
             ResultSet rs = pst.executeQuery();
             
             if(rs.next()){

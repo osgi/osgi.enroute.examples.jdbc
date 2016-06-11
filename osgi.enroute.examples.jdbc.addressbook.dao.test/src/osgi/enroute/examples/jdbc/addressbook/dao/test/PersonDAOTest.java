@@ -17,8 +17,6 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.transaction.control.ScopedWorkException;
 import org.osgi.service.transaction.control.TransactionControl;
-import org.osgi.service.transaction.control.TransactionException;
-import org.osgi.service.transaction.control.TransactionRolledBackException;
 import org.osgi.service.transaction.control.jdbc.JDBCConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +25,13 @@ import osgi.enroute.examples.jdbc.addressbook.dao.api.CrudDAO;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 
 public class PersonDAOTest extends JDBCExampleTest {
-    
+
     final Logger LOGGER = LoggerFactory.getLogger(PersonDAOTest.class);
-    
+
     public PersonDAOTest() throws Exception{
-       super();
+        super();
     }
-    
+
     @Before
     public void setUp(){
         teardown();
@@ -42,55 +40,47 @@ public class PersonDAOTest extends JDBCExampleTest {
                     getService(TransactionControl.class, "(osgi.local.enabled=true)");       
 
             assertNotNull(txControl);
-            
+
             JDBCConnectionProvider connectionProvider = getService(JDBCConnectionProvider.class,
                     "(dataSourceName="+txServiceProps.getProperty(DataSourceFactory.JDBC_DATASOURCE_NAME)+")");
             assertNotNull(connectionProvider);
-            
+
             //FIX ME Move this code to SQL file
             txControl.required( () -> {
                 Connection con = connectionProvider.getResource(txControl);
                 Statement st = con.createStatement();
-             
+
                 st.execute("CREATE TABLE IF NOT EXISTS PERSONS("
-                        + "PERSON_ID INT PRIMARY KEY, "
+                        + "PERSON_ID INT PRIMARY KEY AUTO_INCREMENT, "
                         + "FIRST_NAME VARCHAR(30),"
                         + "LAST_NAME VARCHAR(30)"
                         + ")");
-                
+
                 //TODO ideal candidate for Coordinator service, need to add example
                 st.execute("INSERT INTO PERSONS VALUES (1001,'Tom','Cat');"
                         + "INSERT INTO PERSONS VALUES (1002,'Jerry','Mouse');"
                         + "INSERT INTO PERSONS VALUES (1003,'Mickey','Mouse');"
                         + "INSERT INTO PERSONS VALUES (1004,'Donald','Duck');");
-                
+
                 st.execute("CREATE TABLE IF NOT EXISTS PERSON_ADDRESSES("
                         + "EMAIL VARCHAR(100) PRIMARY KEY,"
                         + "PERSON_ID INT NOT NULL,"
                         + "CITY VARCHAR(100),"
                         + "COUNTRY VARCHAR(100)"
                         + ")");
-                
+
                 //TODO DAO for Address pending
-                
+
                 return null;
             });
         }
-        catch (TransactionRolledBackException e) {
+        catch (Exception e) {
             LOGGER.error(e.getMessage(),e);
+            fail("Error During Setup");
         }
-        catch (TransactionException e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-        catch (ScopedWorkException e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-        catch (InvalidSyntaxException e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-        
+
     }
-    
+
     @SuppressWarnings({"unchecked" })   
     @Test
     public void testSelectAll() {
@@ -113,7 +103,7 @@ public class PersonDAOTest extends JDBCExampleTest {
             fail("Error Selecting");
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void testSave() {
@@ -143,7 +133,7 @@ public class PersonDAOTest extends JDBCExampleTest {
             fail("Error Saving");
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public void testDelete() {
         try {
@@ -164,7 +154,7 @@ public class PersonDAOTest extends JDBCExampleTest {
             fail("Error Deleting");
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void testUpdate() {
@@ -202,11 +192,11 @@ public class PersonDAOTest extends JDBCExampleTest {
                     getService(TransactionControl.class, "(osgi.local.enabled=true)");       
 
             assertNotNull(txControl);
-            
+
             JDBCConnectionProvider connectionProvider = getService(JDBCConnectionProvider.class,
                     "(dataSourceName="+txServiceProps.getProperty(DataSourceFactory.JDBC_DATASOURCE_NAME)+")");
             assertNotNull(connectionProvider);
-            
+
             //FIX ME Move this code to SQL file
             txControl.required( () -> {
                 Connection con = connectionProvider.getResource(txControl);
@@ -215,18 +205,9 @@ public class PersonDAOTest extends JDBCExampleTest {
                 st.execute("DROP TABLE IF EXISTS PERSON_ADDRESS");
                 return null;
             });
-        }
-        catch (TransactionRolledBackException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(),e);
-        }
-        catch (TransactionException e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-        catch (ScopedWorkException e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-        catch (InvalidSyntaxException e) {
-            LOGGER.error(e.getMessage(),e);
+            fail("Error During Tear Down");
         }
     }
 }

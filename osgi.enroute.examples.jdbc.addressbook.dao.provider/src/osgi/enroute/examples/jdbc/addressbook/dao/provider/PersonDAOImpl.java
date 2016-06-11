@@ -74,7 +74,7 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
 
         transactionControl.required(() -> {
 
-            PreparedStatement pst = connection.prepareStatement("DELETE * FROM PERSONS where PERSON_ID=?");
+            PreparedStatement pst = connection.prepareStatement("DELETE FROM PERSONS where PERSON_ID=?");
             pst.setLong(1, primaryKey);
             pst.executeQuery();
             LOGGER.info("Deleted person with ID : {}",primaryKey);
@@ -112,10 +112,9 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
         final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
 
         transactionControl.required( () -> {
-            PreparedStatement pst = connection.prepareStatement("INSERT INTO PERSONS VALUES(?,?,?,)");
-            pst.setLong(1, data.personId);
-            pst.setString(2, data.firstName);
-            pst.setString(3, data.lastName);
+            PreparedStatement pst = connection.prepareStatement("INSERT INTO PERSONS(FIRST_NAME,LAST_NAME) VALUES(?,?)");
+            pst.setString(1, data.firstName);
+            pst.setString(2, data.lastName);
             LOGGER.info("Saved person : {}",data);
             pst.executeUpdate();      
             return null;
@@ -124,9 +123,9 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
     }
 
     @Override
-    public void update(PersonDTO data) {
+    public void update(PersonDTO data) throws ScopedWorkException {
         final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
-
+        //TODO throw custom Exception when data validation fails e.g. personId is 0 an example for ScopedWorkException
         transactionControl.required( () -> {
             PreparedStatement pst = connection.prepareStatement("UPDATE PERSONS SET FIRST_NAME=?, LAST_NAME=? WHERE PERSON_ID=?");
             pst.setString(1, data.firstName);

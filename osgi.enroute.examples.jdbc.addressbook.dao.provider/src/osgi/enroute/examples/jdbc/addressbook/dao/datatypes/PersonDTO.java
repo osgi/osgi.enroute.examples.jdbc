@@ -4,7 +4,7 @@ import org.osgi.dto.DTO;
 
 public class PersonDTO extends DTO {
 
-    public String personId;
+    public long personId;
     public String firstName;
     public String lastName;
     

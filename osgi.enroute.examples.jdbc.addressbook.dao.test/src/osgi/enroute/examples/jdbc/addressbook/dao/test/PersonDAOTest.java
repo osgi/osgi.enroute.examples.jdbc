@@ -1,8 +1,10 @@
 package osgi.enroute.examples.jdbc.addressbook.dao.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -34,7 +36,7 @@ public class PersonDAOTest extends JDBCExampleTest {
     
     @Before
     public void setUp(){
-        
+        teardown();
         try {
             TransactionControl txControl = (TransactionControl) 
                     getService(TransactionControl.class, "(osgi.local.enabled=true)");       
@@ -49,9 +51,7 @@ public class PersonDAOTest extends JDBCExampleTest {
             txControl.required( () -> {
                 Connection con = connectionProvider.getResource(txControl);
                 Statement st = con.createStatement();
-                st.execute("DROP TABLE IF EXISTS PERSONS");
-                st.execute("DROP TABLE IF EXISTS PERSON_ADDRESS");
-                
+             
                 st.execute("CREATE TABLE IF NOT EXISTS PERSONS("
                         + "PERSON_ID INT PRIMARY KEY, "
                         + "FIRST_NAME VARCHAR(30),"
@@ -106,14 +106,127 @@ public class PersonDAOTest extends JDBCExampleTest {
             assertTrue(4 == persons.size());
         } catch (ScopedWorkException e) {
             LOGGER.error(e.getMessage(),e);
+            fail("Error Selecting");
+        }
+        catch (InvalidSyntaxException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Selecting");
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSave() {
+        try {
+
+            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+            assertNotNull(personDAO);
+
+            PersonDTO person = new PersonDTO();
+            person.firstName="Pluto";
+            person.lastName="Dog";
+            person.personId=1005;
+
+            personDAO.save(person);
+
+            PersonDTO expected =  personDAO.findByPK(1005l);
+            assertEquals(1005,expected.personId);
+            assertEquals("Pluto",expected.firstName);
+            assertEquals("Dog",expected.lastName);
+
+        } catch (ScopedWorkException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Saving");
+        }
+        catch (InvalidSyntaxException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Saving");
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void testDelete() {
+        try {
+
+            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+            assertNotNull(personDAO);
+            personDAO.delete(1001l);
+            List<PersonDTO> persons =  personDAO.select();
+            assertFalse(persons.isEmpty());
+            assertTrue(3 == persons.size());
+
+        } catch (ScopedWorkException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Deleting");
+        }
+        catch (InvalidSyntaxException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Deleting");
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testUpdate() {
+        try {
+
+            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+            assertNotNull(personDAO);
+
+            PersonDTO person = new PersonDTO();
+            person.firstName="Thomas";
+            person.lastName="Cat";
+            person.personId=1001;
+
+            personDAO.update(person);
+
+            PersonDTO expected =  personDAO.findByPK(1001l);
+            assertEquals(1001,expected.personId);
+            assertEquals("Thomas",expected.firstName);
+            assertEquals("Cat",expected.lastName);
+
+        } catch (ScopedWorkException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Updating");
+        }
+        catch (InvalidSyntaxException e) {
+            LOGGER.error(e.getMessage(),e);
+            fail("Error Updating");
+        }
+    }
+
+    @After
+    public void tearDown(){
+        try {
+            TransactionControl txControl = (TransactionControl) 
+                    getService(TransactionControl.class, "(osgi.local.enabled=true)");       
+
+            assertNotNull(txControl);
+            
+            JDBCConnectionProvider connectionProvider = getService(JDBCConnectionProvider.class,
+                    "(dataSourceName="+txServiceProps.getProperty(DataSourceFactory.JDBC_DATASOURCE_NAME)+")");
+            assertNotNull(connectionProvider);
+            
+            //FIX ME Move this code to SQL file
+            txControl.required( () -> {
+                Connection con = connectionProvider.getResource(txControl);
+                Statement st = con.createStatement();
+                st.execute("DROP TABLE IF EXISTS PERSONS");
+                st.execute("DROP TABLE IF EXISTS PERSON_ADDRESS");
+                return null;
+            });
+        }
+        catch (TransactionRolledBackException e) {
+            LOGGER.error(e.getMessage(),e);
+        }
+        catch (TransactionException e) {
+            LOGGER.error(e.getMessage(),e);
+        }
+        catch (ScopedWorkException e) {
+            LOGGER.error(e.getMessage(),e);
         }
         catch (InvalidSyntaxException e) {
             LOGGER.error(e.getMessage(),e);
         }
-    }
-    
-    @After
-    public void tearDown(){
-        
     }
 }

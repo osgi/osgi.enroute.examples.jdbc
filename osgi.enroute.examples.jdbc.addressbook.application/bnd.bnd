@@ -22,8 +22,7 @@ JPM-Command:			addrssb
 	{static=static}, \
 	web=web
 
--buildpath: \
-	osgi.enroute.base.api
+-buildpath: osgi.enroute.base.api
 	
 -testpath: \
 	osgi.enroute.junit.wrapper;version=4.12

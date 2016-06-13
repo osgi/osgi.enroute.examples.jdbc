@@ -4,9 +4,9 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-@ObjectClassDefinition(description="The Configuration for the Person DAO for Address Book",
-                       name="Address Book Person DAO",
-                       pid="osgi.enroute.examples.jdbc.addressbook.dao.person")
+@ObjectClassDefinition(description="The Common Configuration for the DAO for Address Book",
+                       name="Address Book DAO",
+                       pid="osgi.enroute.examples.jdbc.addressbook.dao")
 public interface DaoConfiguration {
 
     @AttributeDefinition(

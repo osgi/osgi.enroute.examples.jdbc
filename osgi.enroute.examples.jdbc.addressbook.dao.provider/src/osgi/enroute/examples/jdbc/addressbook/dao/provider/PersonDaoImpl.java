@@ -19,23 +19,27 @@ import org.slf4j.LoggerFactory;
 
 import osgi.enroute.examples.jdbc.addressbook.dao.api.AddressDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.api.PersonDao;
+import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonColumns;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 
 /**
  * 
  */
-@Component(name = "osgi.enroute.examples.jdbc.addressbook.dao",
+@Component(name = "osgi.enroute.examples.jdbc.addressbook.person.dao",
            service=PersonDao.class,
-           configurationPid = "osgi.enroute.examples.jdbc.addressbook.dao.person")
-public class PersonDAOImpl implements PersonDao {
+           configurationPid = "osgi.enroute.examples.jdbc.addressbook.dao")
+public class PersonDaoImpl implements PersonDao {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(PersonDAOImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(PersonDaoImpl.class);
 
     @Reference
     TransactionControl transactionControl;
     
     @Reference(unbind="-",name="provider")
     JDBCConnectionProvider jdbcConnectionProvider;
+    
+    @Reference
+    AddressDao addressDao;
     
     Connection connection;
     
@@ -51,13 +55,11 @@ public class PersonDAOImpl implements PersonDao {
 
             List<PersonDTO> dbResults =  new ArrayList<>();
 
-            ResultSet rs =   connection.createStatement().executeQuery("SELECT * FROM PERSONS ");
+            ResultSet rs =   connection.createStatement().executeQuery(SQL_SELECT_ALL_PERSONS);
 
             while(rs.next()){
-                PersonDTO personDTO = new PersonDTO();
-                personDTO.personId  = rs.getLong("person_id");
-                personDTO.firstName  = rs.getString("first_name");
-                personDTO.lastName  = rs.getString("last_name");
+                PersonDTO personDTO = mapRecordToPerson(rs);
+                personDTO.addresses =  addressDao.select(personDTO.personId);
                 dbResults.add(personDTO);
             }
 
@@ -73,49 +75,52 @@ public class PersonDAOImpl implements PersonDao {
 
         transactionControl.required(() -> {
 
-            PreparedStatement pst = connection.prepareStatement("DELETE FROM PERSONS where PERSON_ID=?");
+            PreparedStatement pst = connection.prepareStatement(SQL_DELETE_PERSON_BY_PK);
             pst.setLong(1, primaryKey);
             pst.executeQuery();
-            LOGGER.info("Deleted person with ID : {}",primaryKey);
+            addressDao.deleteAddresses(primaryKey);
+            LOGGER.info("Deleted Person with ID : {}",primaryKey);
             return null;
         });
     }
 
     @Override
     public PersonDTO findByPK(Long pk) {
-        final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
-        PersonDTO personDTO = transactionControl.supports(() -> {
+        
+        PersonDTO person = transactionControl.supports(() -> {
 
-            PersonDTO person = null;
-            PreparedStatement pst = connection.prepareStatement("SELECT * FROM PERSONS where PERSON_ID=?");
+            PersonDTO personDTO = null;
+         
+            PreparedStatement pst = connection.prepareStatement(SQL_SELECT_PERSON_BY_PK);
             pst.setLong(1, pk);
 
             ResultSet rs = pst.executeQuery();
             
             if(rs.next()){
-                person = new PersonDTO();
-                person.personId  = rs.getLong("person_id");
-                person.firstName  = rs.getString("first_name");
-                person.lastName  = rs.getString("last_name");
+                personDTO = mapRecordToPerson(rs);
             }
 
-            return person;
+            return personDTO;
         });
 
-        return personDTO;
+        return person;
     }
 
     @Override
     public void save(PersonDTO data){
-
-        final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
-
         transactionControl.required( () -> {
-            PreparedStatement pst = connection.prepareStatement("INSERT INTO PERSONS(FIRST_NAME,LAST_NAME) VALUES(?,?)");
+            PreparedStatement pst = connection.prepareStatement(SQL_INSERT_PERSON);
             pst.setString(1, data.firstName);
             pst.setString(2, data.lastName);
             LOGGER.info("Saved person : {}",data);
-            pst.executeUpdate();      
+            pst.executeUpdate();
+            if(!data.addresses.isEmpty()){
+                if(data.addresses.size() > 1){
+                    addressDao.addAddresses(data.addresses);
+                }else{
+                    addressDao.save(data.addresses.get(0));
+                }
+            }
             return null;
         });           
 
@@ -123,9 +128,9 @@ public class PersonDAOImpl implements PersonDao {
 
     @Override
     public void update(PersonDTO data){
-        final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
+        
         transactionControl.required( () -> {
-            PreparedStatement pst = connection.prepareStatement("UPDATE PERSONS SET FIRST_NAME=?, LAST_NAME=? WHERE PERSON_ID=?");
+            PreparedStatement pst = connection.prepareStatement(SQL_UPDATE_PERSON_BY_PK);
             pst.setString(1, data.firstName);
             pst.setString(2, data.lastName);
             pst.setLong(3, data.personId);
@@ -133,6 +138,15 @@ public class PersonDAOImpl implements PersonDao {
             LOGGER.info("Updated person : {}",data);
             return null;
         });      
+    }
+    
+
+    protected PersonDTO mapRecordToPerson(ResultSet rs) throws SQLException {
+        PersonDTO personDTO = new PersonDTO();
+        personDTO.personId  = rs.getLong(PersonColumns.PERSON_ID.columnName());
+        personDTO.firstName  = rs.getString(PersonColumns.FIRST_NAME.columnName());
+        personDTO.lastName  = rs.getString(PersonColumns.LAST_NAME.columnName());
+        return personDTO;
     }
     
     @Deactivate

@@ -1,0 +1,34 @@
+#
+# OSGI ENROUTE EXAMPLES JDBC ADDRESSBOOK DAO PROVIDER BUNDLE 
+#
+
+
+Bundle-Version:					1.0.0.${tstamp}
+Bundle-Description: AddressBook Data Access Objects provider. Notice that this provider exports \
+	the API package.
+
+Private-Package:  \
+	osgi.enroute.examples.jdbc.addressbook.dao.provider
+	
+-buildpath: \
+	osgi.enroute.base.api;version=1.0,\
+	org.osgi.service.jdbc,\
+	tx-control-provider-jdbc-local,\
+	tx-control-service-local
+	
+-testpath: \
+	osgi.enroute.junit.wrapper;version=4.12
+
+-includeresource: {readme.md}
+
+
+-runrequires:  \
+	osgi.identity;filter:='(osgi.identity=osgi.enroute.examples.jdbc.addressbook.dao.provider)'
+	
+-runbundles: \
+	${error;Resolve first}
+Export-Package: \
+	osgi.enroute.examples.jdbc.addressbook.dao.datatypes,\
+	osgi.enroute.examples.jdbc.addressbook.dao.api,\
+	osgi.enroute.examples.jdbc.addressbook.dao.metatypes
+Bundle-Name: AddressBook Data Access Objects

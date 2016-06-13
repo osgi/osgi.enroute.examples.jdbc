@@ -3,50 +3,50 @@ package osgi.enroute.examples.jdbc.addressbook.dao.provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.jdbc.DataSourceFactory;
-import org.osgi.service.transaction.control.ScopedWorkException;
 import org.osgi.service.transaction.control.TransactionControl;
 import org.osgi.service.transaction.control.jdbc.JDBCConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import osgi.enroute.examples.jdbc.addressbook.dao.api.CrudDAO;
+import osgi.enroute.examples.jdbc.addressbook.dao.api.AddressDao;
+import osgi.enroute.examples.jdbc.addressbook.dao.api.PersonDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 
 /**
  * 
  */
 @Component(name = "osgi.enroute.examples.jdbc.addressbook.dao",
-           property="entity=Person",
-           service=CrudDAO.class,
+           service=PersonDao.class,
            configurationPid = "osgi.enroute.examples.jdbc.addressbook.dao.person")
-public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
+public class PersonDAOImpl implements PersonDao {
 
     private final Logger LOGGER = LoggerFactory.getLogger(PersonDAOImpl.class);
 
     @Reference
-    DataSourceFactory dataSourceFactory;
-
-    @Reference
     TransactionControl transactionControl;
-
-    JDBCConnectionProvider jdbcConnectionProvider;
-
+    
     @Reference(unbind="-",name="provider")
-    void setProvider(JDBCConnectionProvider jdbcConnectionProvider){      
-        this.jdbcConnectionProvider = jdbcConnectionProvider;
+    JDBCConnectionProvider jdbcConnectionProvider;
+    
+    Connection connection;
+    
+    @Activate
+    void activate(Map<String, Object> props) {
+        connection = jdbcConnectionProvider.getResource(transactionControl);
     }
 
     @Override
-    public List<PersonDTO> select() throws ScopedWorkException {
-        final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
-
-        //Usually we don't require Transactions for Select 
+    public List<PersonDTO> select(){
+       
         List<PersonDTO> persons =  transactionControl.notSupported(() -> {
 
             List<PersonDTO> dbResults =  new ArrayList<>();
@@ -69,8 +69,7 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
 
 
     @Override
-    public void delete(Long primaryKey) throws ScopedWorkException {
-        final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
+    public void delete(Long primaryKey){
 
         transactionControl.required(() -> {
 
@@ -83,7 +82,7 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
     }
 
     @Override
-    public PersonDTO findByPK(Long pk) throws ScopedWorkException {
+    public PersonDTO findByPK(Long pk) {
         final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
         PersonDTO personDTO = transactionControl.supports(() -> {
 
@@ -107,7 +106,7 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
     }
 
     @Override
-    public void save(PersonDTO data) throws ScopedWorkException {
+    public void save(PersonDTO data){
 
         final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
 
@@ -123,9 +122,8 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
     }
 
     @Override
-    public void update(PersonDTO data) throws ScopedWorkException {
+    public void update(PersonDTO data){
         final Connection connection = jdbcConnectionProvider.getResource(transactionControl);
-        //TODO throw custom Exception when data validation fails e.g. personId is 0 an example for ScopedWorkException
         transactionControl.required( () -> {
             PreparedStatement pst = connection.prepareStatement("UPDATE PERSONS SET FIRST_NAME=?, LAST_NAME=? WHERE PERSON_ID=?");
             pst.setString(1, data.firstName);
@@ -135,6 +133,19 @@ public class PersonDAOImpl implements CrudDAO<PersonDTO,Long> {
             LOGGER.info("Updated person : {}",data);
             return null;
         });      
+    }
+    
+    @Deactivate
+    void deactivate(){
+        if(connection != null ){
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                LOGGER.error("Error closing connection",e);
+            }
+            connection = null;
+        }
     }
 
 }

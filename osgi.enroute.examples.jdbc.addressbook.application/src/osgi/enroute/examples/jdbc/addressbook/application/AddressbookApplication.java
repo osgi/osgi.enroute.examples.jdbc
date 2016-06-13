@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import osgi.enroute.configurer.api.RequireConfigurerExtender;
-import osgi.enroute.examples.jdbc.addressbook.dao.api.CrudDAO;
+import osgi.enroute.examples.jdbc.addressbook.dao.api.PersonDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 import osgi.enroute.google.angular.capabilities.RequireAngularWebResource;
 import osgi.enroute.rest.api.REST;
@@ -26,8 +26,9 @@ public class AddressbookApplication implements REST {
 
     private static final Logger logger  = LoggerFactory.getLogger(AddressbookApplication.class);
 
-    private CrudDAO<PersonDTO, Long> personDao;
-
+    @Reference
+    private PersonDao personDao;
+    
     public String getUpper(String string) {
         return string.toUpperCase();
     }
@@ -89,12 +90,6 @@ public class AddressbookApplication implements REST {
             logger.error("Error updating Person  "+person,e);
         }
         return true;
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Reference(target="(entity=Person)")
-    public void setPersonDao(CrudDAO personDao){
-        this.personDao = personDao;
     }
 
 }

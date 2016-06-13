@@ -21,7 +21,7 @@ import org.osgi.service.transaction.control.jdbc.JDBCConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import osgi.enroute.examples.jdbc.addressbook.dao.api.CrudDAO;
+import osgi.enroute.examples.jdbc.addressbook.dao.api.PersonDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 
 public class PersonDAOTest extends JDBCExampleTest {
@@ -81,13 +81,12 @@ public class PersonDAOTest extends JDBCExampleTest {
 
     }
 
-    @SuppressWarnings({"unchecked" })   
     @Test
     public void testSelectAll() {
 
-
         try {
-            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+
+            PersonDao personDAO = getService(PersonDao.class,null);
 
             assertNotNull(personDAO);
 
@@ -103,13 +102,13 @@ public class PersonDAOTest extends JDBCExampleTest {
             fail("Error Selecting");
         }
     }
-
-    @SuppressWarnings("unchecked")
+    
     @Test
     public void testSave() {
         try {
 
-            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+            PersonDao personDAO = getService(PersonDao.class,null);
+            
             assertNotNull(personDAO);
 
             PersonDTO person = new PersonDTO();
@@ -134,11 +133,11 @@ public class PersonDAOTest extends JDBCExampleTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void testDelete() {
         try {
 
-            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+            PersonDao personDAO = getService(PersonDao.class,null);
+            
             assertNotNull(personDAO);
             personDAO.delete(1001l);
             List<PersonDTO> persons =  personDAO.select();
@@ -155,12 +154,12 @@ public class PersonDAOTest extends JDBCExampleTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testUpdate() {
         try {
 
-            CrudDAO<PersonDTO, Long> personDAO = getService(CrudDAO.class,"(entity=Person)");
+            PersonDao personDAO = getService(PersonDao.class,null);
+            
             assertNotNull(personDAO);
 
             PersonDTO person = new PersonDTO();

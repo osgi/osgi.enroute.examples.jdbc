@@ -57,10 +57,11 @@ public class AddressbookApplication implements REST {
         return persons;
     }
     
-    public boolean deletePerson(Long personId) {
+    public boolean deletePerson(PersonDTO person) {
+        long personId = person.personId;
         logger.info("Delete Person Id:{}",personId);
         try {
-            personDao.delete(personId);
+            personDao.delete(person);
         }
         catch (ScopedWorkException e) {
             logger.error("Error retriving Person with Id: "+personId,e);

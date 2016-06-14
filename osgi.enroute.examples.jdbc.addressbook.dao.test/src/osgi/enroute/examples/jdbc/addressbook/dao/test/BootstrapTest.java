@@ -9,7 +9,9 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.osgi.service.transaction.control.jdbc.JDBCConnectionProvider;
 
-public class BootstrapTest extends JDBCExampleTest {
+import osgi.enroute.examples.jdbc.addressbook.dao.JDBCExampleBase;
+
+public class BootstrapTest extends JDBCExampleBase {
     
     public BootstrapTest() throws Exception {
         super();

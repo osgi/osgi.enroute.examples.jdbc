@@ -8,8 +8,9 @@ Bundle-Description: This bundle is an OSGi test bundle that tests the enRoute JD
 	API.
 
 
-Private-Package:  \
-	osgi.enroute.examples.jdbc.addressbook.dao.test
+Private-Package: \
+	osgi.enroute.examples.jdbc.addressbook.dao.test,\
+	osgi.enroute.examples.jdbc.addressbook.dao
 
 Test-Cases: ${test-cases}
 
@@ -42,6 +43,7 @@ Test-Cases: ${test-cases}
 	org.apache.felix.configadmin;version='[1.8.6,1.8.7)',\
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
 	org.apache.felix.scr;version='[2.0.0,2.0.1)',\
+	org.eclipse.equinox.coordinator;version='[1.3.100,1.3.101)',\
 	org.eclipse.equinox.metatype;version='[1.4.100,1.4.101)',\
 	org.h2;version='[1.4.192,1.4.193)',\
 	org.mariadb.jdbc;version='[1.4.5,1.4.6)',\
@@ -60,7 +62,7 @@ Test-Cases: ${test-cases}
 -augment.pax_jdbc_h2= \
 	org.ops4j.pax.jdbc.h2;\
 		capability:="org.osgi.service;objectClass=org.osgi.service.jdbc.DataSourceFactory;osgi.jdbc.driver.class=org.h2.Driver;osgi.jdbc.driver.name=h2;effective:=active"
-		
+
 -augment.tx_control_service= \
 	tx-control-service-local;\
 		capability:="org.osgi.service;objectClass=org.osgi.service.transaction.control.TransactionControl;effective:=active"

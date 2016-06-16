@@ -7,7 +7,9 @@ Bundle-Version:					1.0.0.${tstamp}
 Bundle-Description: AddressBook Data Access Objects provider. Notice that this provider exports \
 	the API package.
 
-Private-Package: osgi.enroute.examples.jdbc.addressbook.dao.provider
+Private-Package: \
+	osgi.enroute.examples.jdbc.addressbook.dao.provider,\
+	osgi.enroute.examples.jdbc.addressbook.dao.participants
 	
 -buildpath: \
 	osgi.enroute.base.api;version=1.0,\
@@ -29,6 +31,5 @@ Private-Package: osgi.enroute.examples.jdbc.addressbook.dao.provider
 Export-Package: \
 	osgi.enroute.examples.jdbc.addressbook.dao.datatypes,\
 	osgi.enroute.examples.jdbc.addressbook.dao.api,\
-	osgi.enroute.examples.jdbc.addressbook.dao.metatypes,\
-	osgi.enroute.examples.jdbc.addressbook.dao.participants
+	osgi.enroute.examples.jdbc.addressbook.dao.metatypes
 Bundle-Name: AddressBook Data Access Objects

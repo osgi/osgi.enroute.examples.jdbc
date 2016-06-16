@@ -3,8 +3,6 @@
  */
 package osgi.enroute.examples.jdbc.addressbook.dao.participants;
 
-import static osgi.enroute.examples.jdbc.addressbook.dao.api.AddressDao.SQL_ADD_ADDRESS;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.AddressDTO;
+import osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable;
 
 /**
  * @author kameshs
@@ -55,7 +54,8 @@ public class AddressSaveParticipant implements Participant {
         logger.info("Batching Address save for Person");
        
         transactionControl.required( () -> {
-            PreparedStatement pst = connection.prepareStatement(SQL_ADD_ADDRESS);
+            
+            PreparedStatement pst = connection.prepareStatement(PersonAddressTable.SQL_ADD_ADDRESS);
 
             List<AddressDTO> addresses = (List<AddressDTO> ) coordination.getVariables().get(getClass());
 

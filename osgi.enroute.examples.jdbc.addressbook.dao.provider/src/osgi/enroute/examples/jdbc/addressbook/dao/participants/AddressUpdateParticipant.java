@@ -3,8 +3,6 @@
  */
 package osgi.enroute.examples.jdbc.addressbook.dao.participants;
 
-import static osgi.enroute.examples.jdbc.addressbook.dao.api.AddressDao.SQL_UPDATE_ADDRESS_BY_PK_AND_PERSON_ID;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.AddressDTO;
+import osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable;
 
 /**
  * @author kameshs
@@ -54,7 +53,7 @@ public class AddressUpdateParticipant implements Participant {
         logger.info("Batching Address Update for Person");
         
         transactionControl.required( () -> {
-            PreparedStatement pst = connection.prepareStatement(SQL_UPDATE_ADDRESS_BY_PK_AND_PERSON_ID);
+            PreparedStatement pst = connection.prepareStatement(PersonAddressTable.SQL_UPDATE_ADDRESS_BY_PK_AND_PERSON_ID);
 
             List<AddressDTO> addresses = (List<AddressDTO> ) coordination.getVariables().get(getClass());
 

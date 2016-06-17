@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import osgi.enroute.examples.jdbc.addressbook.dao.api.AddressDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.api.PersonDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.AddressDTO;
-import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonColumns;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 
 /**
@@ -33,10 +32,10 @@ import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonDTO;
 @Component(name = "osgi.enroute.examples.jdbc.addressbook.person.dao",
 service=PersonDao.class,
 configurationPid = "osgi.enroute.examples.jdbc.addressbook.dao")
-public class PersonDaoImpl implements PersonDao {
+public class PersonDaoImpl implements PersonDao,PersonTable {
 
     private Logger logger = LoggerFactory.getLogger(PersonDaoImpl.class);
-
+    
     //Some cordinator names for better understanding
     String ADDRESS_DAO_SAVE_COORDINATOR = "osgi.enroute.examples.jdbc.addressbook.save";
     String ADDRESS_DAO_UPDATE_COORDINATOR = "osgi.enroute.examples.jdbc.addressbook.update";
@@ -199,9 +198,9 @@ public class PersonDaoImpl implements PersonDao {
 
     protected PersonDTO mapRecordToPerson(ResultSet rs) throws SQLException {
         PersonDTO personDTO = new PersonDTO();
-        personDTO.personId  = rs.getLong(PersonColumns.PERSON_ID.columnName());
-        personDTO.firstName  = rs.getString(PersonColumns.FIRST_NAME.columnName());
-        personDTO.lastName  = rs.getString(PersonColumns.LAST_NAME.columnName());
+        personDTO.personId  = rs.getLong(PERSON_ID);
+        personDTO.firstName  = rs.getString(FIRST_NAME);
+        personDTO.lastName  = rs.getString(LAST_NAME);
         return personDTO;
     }
 

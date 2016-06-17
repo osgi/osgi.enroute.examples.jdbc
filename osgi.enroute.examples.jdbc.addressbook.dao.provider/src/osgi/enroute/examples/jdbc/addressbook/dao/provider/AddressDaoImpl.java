@@ -1,5 +1,11 @@
 package osgi.enroute.examples.jdbc.addressbook.dao.provider;
 
+import static osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable.SQL_ADD_ADDRESS;
+import static osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable.SQL_DELETE_ALL_ADDRESS_BY_PERSON_ID;
+import static osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable.SQL_SELECT_ADDRESS_BY_PERSON;
+import static osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable.SQL_SELECT_ADDRESS_BY_PK;
+import static osgi.enroute.examples.jdbc.addressbook.dao.provider.PersonAddressTable.SQL_UPDATE_ADDRESS_BY_PK_AND_PERSON_ID;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import osgi.enroute.examples.jdbc.addressbook.dao.api.AddressDao;
 import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.AddressDTO;
-import osgi.enroute.examples.jdbc.addressbook.dao.datatypes.PersonAddressColumns;
 import osgi.enroute.examples.jdbc.addressbook.dao.participants.AddressSaveParticipant;
 import osgi.enroute.examples.jdbc.addressbook.dao.participants.AddressUpdateParticipant;
 
@@ -32,7 +37,9 @@ import osgi.enroute.examples.jdbc.addressbook.dao.participants.AddressUpdatePart
 public class AddressDaoImpl implements AddressDao {
 
     private Logger logger = LoggerFactory.getLogger(AddressDaoImpl.class);
-
+    
+    
+    
     @Reference
     TransactionControl transactionControl;
     
@@ -187,10 +194,10 @@ public class AddressDaoImpl implements AddressDao {
     
     protected AddressDTO mapRecordToAddress(ResultSet rs) throws SQLException{
         AddressDTO addressDTO = new AddressDTO();
-        addressDTO.personId  = rs.getLong(PersonAddressColumns.PERSON_ID.columnName());
-        addressDTO.emailAddress  = rs.getString(PersonAddressColumns.EMAIL_ADDRESS.columnName());
-        addressDTO.city  = rs.getString(PersonAddressColumns.CITY.columnName());
-        addressDTO.country  = rs.getString(PersonAddressColumns.COUNTRY.columnName());
+        addressDTO.personId  = rs.getLong(PersonAddressTable.PERSON_ID);
+        addressDTO.emailAddress  = rs.getString(PersonAddressTable.EMAIL_ADDRESS);
+        addressDTO.city  = rs.getString(PersonAddressTable.CITY);
+        addressDTO.country  = rs.getString(PersonAddressTable.COUNTRY);
         return addressDTO;
     }
 

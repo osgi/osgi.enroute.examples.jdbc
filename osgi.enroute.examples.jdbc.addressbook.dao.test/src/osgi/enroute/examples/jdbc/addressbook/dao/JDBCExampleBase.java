@@ -2,7 +2,6 @@ package osgi.enroute.examples.jdbc.addressbook.dao;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Hashtable;
 import java.util.Properties;
 
 import org.junit.AfterClass;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public class JDBCExampleBase {
 
-    private static final String FACTORY_PID_ARIES_TX_CONTROL_JDBC_LOCAL = "org.apache.aries.tx.control.jdbc.local";
+    protected static final String FACTORY_PID_ARIES_TX_CONTROL_JDBC_LOCAL = "org.apache.aries.tx.control.jdbc.local";
     
     final Logger LOGGER = LoggerFactory.getLogger(JDBCExampleBase.class);
     
@@ -33,8 +32,8 @@ public class JDBCExampleBase {
 
     protected  Configuration localJDBCProviderConfig;
             
-    @SuppressWarnings({"unchecked","rawtypes"})
     public JDBCExampleBase() throws Exception {
+       
         assertNotNull(context);
         
         txServiceProps.load(this.getClass().getResourceAsStream("/localProvider.properties"));
@@ -42,14 +41,7 @@ public class JDBCExampleBase {
         cmTracker = new ServiceTracker<>(context, ConfigurationAdmin.class, null);
 
         cmTracker.open();
-
-        configAdmin  = (ConfigurationAdmin) cmTracker.waitForService(5000);
-
-        localJDBCProviderConfig = configAdmin.createFactoryConfiguration(FACTORY_PID_ARIES_TX_CONTROL_JDBC_LOCAL,null);
-        localJDBCProviderConfig.update((Hashtable)txServiceProps);
-        //Giving some time for the service discovery and registration to happen
-        Thread.sleep(1000);
-        
+ 
     }
     
     @AfterClass

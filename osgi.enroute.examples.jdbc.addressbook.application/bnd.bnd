@@ -3,7 +3,8 @@
 #
 
 Bundle-Version: 1.0.0.${tstamp}
-Bundle-Description: A Simple Address Book applicaiton to demonstrate enRoute with JDBC and Transacitons
+Bundle-Description: A enRoute example demonstrating usage of [Aries \
+	Tx-Control](http://aries.apache.org/modules/tx-control) with JDBC
 
 Private-Package:  \
 	osgi.enroute.examples.jdbc.addressbook.application
@@ -81,3 +82,4 @@ JPM-Command:			addrssb
 	tx-control-provider-jdbc-local;\
 		capability:="org.osgi.service;objectClass=org.osgi.service.transaction.control.jdbc.JDBCConnectionProvider;effective:=active"
 Bundle-Name: AddressBook Application
+Bundle-Category: examples

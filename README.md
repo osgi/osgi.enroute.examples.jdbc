@@ -15,11 +15,21 @@ The example uses two DB entities Person and Example as shown in the diagram belo
 ![enRoute JDBC Example ERD](./enRoute_JDBC_ERD.png?dl=0 "enRoute JDBC Example ERD")
 
 ### Application
-The application is available over the url http://localhost:8080/osgi.enroute.examples.jdbc/index.html 
+The application is available over the url `http://localhost:8080/osgi.enroute.examples.jdbc.addressbook/index.html`
+
+The following table shows the list of resources available to be consumed,
+
+| HTTP Method   |      URL |Use |Transaction|
+|----------|:-------------:|:-------------:|:-------------:|
+| GET |  http://localhost:8080/rest/person/{personId} |Get person by personId| Not Required, Supports|
+| GET |  http://localhost:8080/rest/person |Get all persons from the database| Not Required, Supports|
+| PUT |  http://localhost:8080/rest/person|Save person along with addresses| Required|
+| POST |    http://localhost:8080/rest/person|Update person along with addresses| Required|
+| DELETE | http://localhost:8080/rest/person/{personId} |Delete person by personId| Required|
+
 
 The example application and datasource is configured using the [configuration.json](./osgi.enroute.examples.jdbc.addressbook.application/configuration/configuration.json)
 
 [1]: http://aries.apache.org/modules/tx-control
 [2]: https://ops4j1.jira.com/wiki/display/PAXJDBC
 [3]: http://enroute.osgi.org/quick-start.html
-

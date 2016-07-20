@@ -15,5 +15,5 @@ public interface PersonDao {
 
     public void update(PersonDTO data);
 
-    public void delete(PersonDTO data) ;
+    public void delete(Long pk) ;
 }

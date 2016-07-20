@@ -83,10 +83,9 @@ public class PersonDaoImpl implements PersonDao,PersonTable {
 
 
     @Override
-    public void delete(PersonDTO data){
+    public void delete(Long primaryKey){
 
         transactionControl.required(() -> {
-            Long primaryKey = data.personId;
             PreparedStatement pst = connection.prepareStatement(SQL_DELETE_PERSON_BY_PK);
             pst.setLong(1,primaryKey);
             pst.executeUpdate();

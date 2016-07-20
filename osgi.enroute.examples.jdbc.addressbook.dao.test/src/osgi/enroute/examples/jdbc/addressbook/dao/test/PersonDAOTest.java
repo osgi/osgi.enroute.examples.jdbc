@@ -221,7 +221,7 @@ public class PersonDAOTest extends JDBCExampleBase {
         assertNotNull(personDao);
         PersonDTO person = new PersonDTO();
         person.personId = 1001;
-        personDao.delete(person);
+        personDao.delete(person.personId);
         List<PersonDTO> persons =  personDao.select();
         assertFalse(persons.isEmpty());
         assertTrue(3 == persons.size());

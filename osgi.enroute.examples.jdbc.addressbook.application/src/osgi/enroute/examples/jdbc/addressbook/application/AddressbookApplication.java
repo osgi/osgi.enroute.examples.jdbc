@@ -41,6 +41,7 @@ public class AddressbookApplication implements REST {
         }
         catch (ScopedWorkException e) {
             logger.error("Error retriving Person with Id: "+personId,e);
+            throw e;
         }
         return personDTO;
     }
@@ -53,18 +54,19 @@ public class AddressbookApplication implements REST {
         }
         catch (ScopedWorkException e) {
             logger.error("Error retriving all person",e);
+            throw e;
         }
         return persons;
     }
     
-    public boolean deletePerson(PersonDTO person) {
-        long personId = person.personId;
+    public boolean deletePerson(long personId) {
         logger.info("Delete Person Id:{}",personId);
         try {
-            personDao.delete(person);
+            personDao.delete(personId);
         }
         catch (ScopedWorkException e) {
             logger.error("Error retriving Person with Id: "+personId,e);
+            throw e;
         }
         
         return true;
@@ -77,6 +79,7 @@ public class AddressbookApplication implements REST {
         }
         catch (ScopedWorkException e) {
             logger.error("Error saving Person  "+person,e);
+            throw e;
         }
         return true;
     }
@@ -89,8 +92,8 @@ public class AddressbookApplication implements REST {
         }
         catch (ScopedWorkException e) {
             logger.error("Error updating Person  "+person,e);
+            throw e;
         }
         return true;
     }
-
 }

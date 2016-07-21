@@ -11,7 +11,7 @@
 		"aries.jdbc.property.names": "user,serverName,portNumber,password,databaseName"
 	},
 	{
-		"service.factoryPid": "org.apache.aries.tx.control.jdbc.local",
+		"service.factoryPid": "org.apache.aries.tx.control.jdbc.localxxx",
 		"service.pid": "osgi.enroute.examples.jdbc.addressbook.dsMariadb",
 		"user": "demo",
 		"password": "demo",

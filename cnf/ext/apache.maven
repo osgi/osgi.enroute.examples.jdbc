@@ -1,13 +1,13 @@
-org.apache.aries.tx-control:tx-control-provider-jdbc-local:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-provider-jdbc-xa:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-provider-jpa-local:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-service-common:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-service-local:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-api:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-service-xa:0.0.1-SNAPSHOT
-org.apache.aries.tx-control:tx-control-provider-jdbc-common:0.0.1-SNAPSHOT
+org.apache.aries.tx-control:tx-control-provider-jdbc-local:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-provider-jdbc-xa:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-provider-jpa-local:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-service-common:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-service-local:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-api:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-service-xa:0.0.2-SNAPSHOT
+org.apache.aries.tx-control:tx-control-provider-jdbc-common:0.0.2-SNAPSHOT
 # Having issues in pulling this JAR
-org.apache.aries.tx-control:tx-control-provider-jpa-xa:0.0.1-SNAPSHOT
+org.apache.aries.tx-control:tx-control-provider-jpa-xa:0.0.2-SNAPSHOT
 org.osgi:org.osgi.service.jdbc:1.0.0
 org.osgi:org.osgi.service.jpa:1.0.0
 org.osgi:osgi.annotation:6.0.1
@@ -30,5 +30,3 @@ org.ops4j.pax.jdbc:pax-jdbc-config:0.6.0
 com.h2database:h2:1.4.192
 org.apache.servicemix.bundles:org.apache.servicemix.bundles.jasypt:1.9.2_1
 org.mariadb.jdbc:mariadb-java-client:1.4.5
-org.slf4j:slf4j-api:1.7.21
-org.slf4j:slf4j-simple:1.7.21

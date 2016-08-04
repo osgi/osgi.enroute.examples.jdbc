@@ -1,0 +1,47 @@
+<div class="container">
+	<div class="row">
+
+		<form class="form-horizontal" role="form">
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<a role="button" class='btnbtn-info' href="#/addressbook/-1">New
+						Entry</a>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<table class='table-condensed table-hover table-bordered '>
+						<colgroup>
+							<col>
+						</colgroup>
+						<thead>
+							<th>Last Name</th>
+							<th>First Name</th>
+							<th>Email</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan=3><input type=text class="form-control"
+									ng-model=filter></td>
+							</tr>
+							<tr ng-repeat="p in list | filter: filter | orderBy: 'lastName' "
+								ng-click=select(p.personId)>
+								<td>
+									<div id="person-{{p.personId}}">
+										<b>{{p.lastName}}</b>
+									</div>
+								</td>
+								<td>{{p.firstName}}</td>
+								<td><code>{{p.addresses[0].emailAddress}}</code></td>
+							</tr>
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+

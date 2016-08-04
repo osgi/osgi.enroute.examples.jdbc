@@ -8,7 +8,7 @@ encoding//src/osgi/enroute/examples/jdbc/addressbook/application/AddressbookAppl
 encoding//static/osgi.enroute.examples.jdbc.addressbook/favicon.ico=UTF-8
 encoding//static/osgi.enroute.examples.jdbc.addressbook/index.html=UTF-8
 encoding//static/osgi.enroute.examples.jdbc.addressbook/main/htm/about.htm=UTF-8
-encoding//static/osgi.enroute.examples.jdbc.addressbook/main/htm/home.htm=UTF-8
+encoding//static/osgi.enroute.examples.jdbc.addressbook/main/htm/people.htm=UTF-8
 encoding//test/.gitignore=UTF-8
 encoding//web/main.js=UTF-8
 encoding//web/style.css=UTF-8

@@ -7,8 +7,7 @@ Bundle-Description: A enRoute example demonstrating usage of [Aries \
 	Tx-Control](http://aries.apache.org/modules/tx-control) with JDBC
 
 Private-Package: \
-	osgi.enroute.examples.jdbc.addressbook.application,\
-	osgi.enroute.examples.jdbc.addressbook.rest.provider
+	osgi.enroute.examples.jdbc.addressbook.application
 
 EnRoute-Application: 	osgi.enroute.examples.jdbc.addressbook
 JPM-Command:			addressbook

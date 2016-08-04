@@ -3,12 +3,11 @@
 (function() {
 
 	var MODULE = angular.module('osgi.enroute.examples.jdbc.addressbook',
-			[ 'ngRoute', 'ngResource' ]);
+			[ "enRoute$addressbook", 'ngRoute' ]);
 
 	MODULE.config( function($routeProvider) {
-		$routeProvider.when('/', { controller: mainProvider, templateUrl: '/osgi.enroute.examples.jdbc.addressbook/main/htm/home.htm'});
 		$routeProvider.when('/about', { templateUrl: '/osgi.enroute.examples.jdbc.addressbook/main/htm/about.htm'});
-		$routeProvider.otherwise('/');
+		$routeProvider.otherwise('/addressbook');
 	});
 	
 	MODULE.run( function($rootScope, $location) {
@@ -20,7 +19,6 @@
 			return $location.path();
 		}
 	});
-	
 	
 	
 	var mainProvider = function($scope, $http) {

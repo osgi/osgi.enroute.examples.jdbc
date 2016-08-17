@@ -42,7 +42,7 @@ public class AddressDaoImpl implements AddressDao {
 	@Reference
 	private Coordinator coordinator;
 
-	@Reference
+	@Reference(name="provider")
 	JDBCConnectionProvider jdbcConnectionProvider;
 
 	@Reference(target = "(name=addressSave)")

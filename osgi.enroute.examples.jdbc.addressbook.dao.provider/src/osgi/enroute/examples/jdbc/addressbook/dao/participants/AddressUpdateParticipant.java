@@ -36,7 +36,7 @@ public class AddressUpdateParticipant implements Participant {
     @Reference
     TransactionControl transactionControl;
         
-    @Reference
+    @Reference(name="provider")
     JDBCConnectionProvider jdbcConnectionProvider;
     
     Connection connection;

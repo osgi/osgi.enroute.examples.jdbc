@@ -41,7 +41,7 @@ public class PersonDaoImpl implements PersonDao, PersonTable {
 	@Reference
 	TransactionControl transactionControl;
 
-	@Reference
+	@Reference(name="provider")
 	JDBCConnectionProvider jdbcConnectionProvider;
 
 	@Reference

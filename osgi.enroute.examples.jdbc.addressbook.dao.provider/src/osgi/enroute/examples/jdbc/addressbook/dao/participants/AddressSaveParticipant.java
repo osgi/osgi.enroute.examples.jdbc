@@ -37,7 +37,7 @@ public class AddressSaveParticipant implements Participant {
     @Reference
     TransactionControl transactionControl;
         
-    @Reference(unbind="-",name="provider")
+    @Reference
     JDBCConnectionProvider jdbcConnectionProvider;
     
     Connection connection;
